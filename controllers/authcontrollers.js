@@ -103,18 +103,20 @@ static forgotPassword=async(req,res)=>{
            {
             const genSalt=await bcrypt.genSalt(10);
             const hashedPassword=await bcrypt.hash(newPassword,genSalt);
-            const newPass=new authmodels({
-                   email:email,
-                   newPassword:hashedPassword,
-                   verifyPassword:hashedPassword            
-            })
+            await authmodels.findOneAndUpdate({email},{password:hashedPassword},{new:true});
+            return res.status(200).json({message:"updated succesfully"})
+            // const newPass=new authmodels({
+            //        email:email,
+            //        newPassword:hashedPassword,
+            //        verifyPassword:hashedPassword            
+            // })
 
           
-            const savedPas=await newPass.save();
-            if(savedPas)
-            {
-                return res.status(200).json({message:"password saved succesfully in the database"})
-            } 
+            // const savedPas=await newPass.save();
+            // if(savedPas)
+            // {
+            //     return res.status(200).json({message:"password saved succesfully in the database"})
+            // } 
            }
            else{
             return res.status(400).json({message:"password does not match,please enter correct password"})
