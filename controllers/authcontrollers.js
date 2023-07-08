@@ -71,7 +71,7 @@ class authcontroller{
                 if(ispasswordcorrect)
                 {
                     const token = jwt.sign({ userId: isemail._id }, "hey Anant", {
-                        expiresIn: "1d",
+                        expiresIn: "5sec",
                 })
                 return res.status(200).json({message:"login successfull",token,name:isemail.name})
                }
@@ -96,7 +96,7 @@ class authcontroller{
 static forgotPassword=async(req,res)=>{
     const{email,newPassword,verifyPassword}=req.body;
     try {
-        const isGot=await authmodels.find({email,password})
+        const isGot=await authmodels.findOne({email})
         if(isGot.email==email)
         {
            if(newPassword==verifyPassword)
@@ -108,9 +108,10 @@ static forgotPassword=async(req,res)=>{
                    newPassword:hashedPassword,
                    verifyPassword:hashedPassword            
             })
-           isGot.password=hashedPassword;
-            const savedPass=await newPass.save();
-            if(savedPass)
+
+          
+            const savedPas=await newPass.save();
+            if(savedPas)
             {
                 return res.status(200).json({message:"password saved succesfully in the database"})
             } 
